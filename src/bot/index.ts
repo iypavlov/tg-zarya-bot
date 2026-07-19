@@ -1,7 +1,7 @@
 import { Bot, session } from 'grammy';
 import { config } from '../config/index.js';
 import { prisma } from '../db/client.js';
-import { registerStartHandler } from './handlers/start.js';
+import { registerHandlers } from './handlers/index.js';
 import type { BotContext, SessionData } from './context.js';
 
 const bot = new Bot<BotContext>(config.BOT_TOKEN);
@@ -13,7 +13,7 @@ bot.use(async (ctx, next) => {
   await next();
 });
 
-registerStartHandler(bot);
+registerHandlers(bot);
 
 bot.catch((err) => {
   console.error('Bot error:', err);

@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { searchFlights, getFlightPrice, TravelpayoutsError } from '../../src/services/travelpayouts.js';
+import {
+  searchFlights,
+  getFlightPrice,
+  TravelpayoutsError,
+} from '../../src/services/travelpayouts.js';
 
 vi.mock('../../src/config/index.js', () => ({
   config: {

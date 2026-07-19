@@ -35,7 +35,9 @@ export class TravelpayoutsError extends Error {
   }
 }
 
-export async function searchFlights(params: TravelpayoutsSearchParams): Promise<FlightPriceResult[]> {
+export async function searchFlights(
+  params: TravelpayoutsSearchParams,
+): Promise<FlightPriceResult[]> {
   const url = new URL(`${BASE_URL}/aviasales/v3/prices_for_dates`);
 
   url.searchParams.set('origin', params.origin);
@@ -58,10 +60,7 @@ export async function searchFlights(params: TravelpayoutsSearchParams): Promise<
   }
 
   if (!response.ok) {
-    throw new TravelpayoutsError(
-      `API responded with status ${response.status}`,
-      response.status,
-    );
+    throw new TravelpayoutsError(`API responded with status ${response.status}`, response.status);
   }
 
   const json = (await response.json()) as TravelpayoutsResponse;
