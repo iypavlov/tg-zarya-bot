@@ -1,0 +1,101 @@
+{
+  "version": "6.19.3",
+  "steps": [
+    {
+      "tag": "CreateSchema",
+      "schema": "public"
+    },
+    {
+      "tag": "CreateTable",
+      "table": "User",
+      "columns": [
+        { "name": "id", "type": "TEXT", "default": { "name": "uuid" } },
+        { "name": "telegramId", "type": "BIGINT", "isUnique": true },
+        { "name": "username", "type": "TEXT", "optional": true },
+        { "name": "firstName", "type": "TEXT", "optional": true },
+        { "name": "createdAt", "type": "TIMESTAMP(3)", "default": { "name": "now" } },
+        { "name": "updatedAt", "type": "TIMESTAMP(3)" }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "Flight",
+      "columns": [
+        { "name": "id", "type": "TEXT" },
+        { "name": "flightNumber", "type": "TEXT" },
+        { "name": "origin", "type": "TEXT" },
+        { "name": "destination", "type": "TEXT" },
+        { "name": "departureDate", "type": "TIMESTAMP(3)" },
+        { "name": "airline", "type": "TEXT" },
+        { "name": "createdAt", "type": "TIMESTAMP(3)", "default": { "name": "now" } },
+        { "name": "updatedAt", "type": "TIMESTAMP(3)" }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "Price",
+      "columns": [
+        { "name": "id", "type": "TEXT" },
+        { "name": "flightId", "type": "TEXT" },
+        { "name": "amount", "type": "DECIMAL(65,30)" },
+        { "name": "currency", "type": "TEXT", "default": "RUB" },
+        { "name": "fareClass", "type": "TEXT", "optional": true },
+        { "name": "checkedAt", "type": "TIMESTAMP(3)", "default": { "name": "now" } },
+        { "name": "source", "type": "TEXT", "default": "travelpayouts" }
+      ]
+    },
+    {
+      "tag": "CreateTable",
+      "table": "Subscription",
+      "columns": [
+        { "name": "id", "type": "TEXT" },
+        { "name": "userId", "type": "TEXT" },
+        { "name": "flightId", "type": "TEXT" },
+        { "name": "isActive", "type": "BOOLEAN", "default": true },
+        { "name": "notifyOnChange", "type": "BOOLEAN", "default": true },
+        { "name": "notifyDaily", "type": "BOOLEAN", "default": false },
+        { "name": "lastNotifiedAt", "type": "TIMESTAMP(3)", "optional": true },
+        { "name": "createdAt", "type": "TIMESTAMP(3)", "default": { "name": "now" } },
+        { "name": "updatedAt", "type": "TIMESTAMP(3)" }
+      ]
+    },
+    {
+      "tag": "CreateIndex",
+      "index": "User_telegramId_key",
+      "table": "User",
+      "columns": ["telegramId"],
+      "unique": true
+    },
+    {
+      "tag": "CreateIndex",
+      "index": "Subscription_userId_flightId_key",
+      "table": "Subscription",
+      "columns": ["userId", "flightId"],
+      "unique": true
+    },
+    {
+      "tag": "AddForeignKey",
+      "constraint": "Price_flightId_fkey",
+      "table": "Price",
+      "columns": ["flightId"],
+      "referencedTable": "Flight",
+      "referencedColumns": ["id"]
+    },
+    {
+      "tag": "AddForeignKey",
+      "constraint": "Subscription_userId_fkey",
+      "table": "Subscription",
+      "columns": ["userId"],
+      "referencedTable": "User",
+      "referencedColumns": ["id"]
+    },
+    {
+      "tag": "AddForeignKey",
+      "constraint": "Subscription_flightId_fkey",
+      "table": "Subscription",
+      "columns": ["flightId"],
+      "referencedTable": "Flight",
+      "referencedColumns": ["id"]
+    }
+  ]
+}

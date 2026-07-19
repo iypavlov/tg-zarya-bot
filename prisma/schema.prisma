@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  telegramId    BigInt         @unique
+  username      String?
+  firstName     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+}
+
+model Flight {
+  id            String         @id @default(uuid())
+  flightNumber  String
+  origin        String
+  destination   String
+  departureDate DateTime
+  airline       String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  prices        Price[]
+  subscriptions Subscription[]
+}
+
+model Price {
+  id        String   @id @default(uuid())
+  flightId  String
+  flight    Flight   @relation(fields: [flightId], references: [id])
+  amount    Decimal
+  currency  String   @default("RUB")
+  fareClass String?
+  checkedAt DateTime @default(now())
+  source    String   @default("travelpayouts")
+}
+
+model Subscription {
+  id             String     @id @default(uuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id])
+  flightId       String
+  flight         Flight     @relation(fields: [flightId], references: [id])
+  isActive       Boolean    @default(true)
+  notifyOnChange Boolean    @default(true)
+  notifyDaily    Boolean    @default(false)
+  lastNotifiedAt DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@unique([userId, flightId])
+}
