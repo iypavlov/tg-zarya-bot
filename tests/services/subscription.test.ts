@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { parseFlightInput, createSubscription, getUserSubscriptions, deactivateSubscription, SubscriptionError } from '../../src/services/subscription.js';
+import {
+  parseFlightInput,
+  createSubscription,
+  getUserSubscriptions,
+  deactivateSubscription,
+  SubscriptionError,
+} from '../../src/services/subscription.js';
 
 vi.mock('../../src/services/travelpayouts.js', () => ({
   getFlightPrice: vi.fn(),
@@ -143,7 +149,13 @@ describe('createSubscription', () => {
       isActive: true,
     });
 
-    const result = await createSubscription(BigInt(123456789), 'SU1234', 'SVO', 'LED', '2025-12-25');
+    const result = await createSubscription(
+      BigInt(123456789),
+      'SU1234',
+      'SVO',
+      'LED',
+      '2025-12-25',
+    );
 
     expect(result.flight.flightNumber).toBe('SU1234');
     expect(result.subscription.isActive).toBe(true);
@@ -165,9 +177,7 @@ describe('createSubscription', () => {
 
   it('should search flights when no flight number given', async () => {
     const { searchFlights } = await import('../../src/services/travelpayouts.js');
-    vi.mocked(searchFlights).mockResolvedValue([
-      { ...MOCK_FLIGHT_RESULT, flightNumber: 'DP5678' },
-    ]);
+    vi.mocked(searchFlights).mockResolvedValue([{ ...MOCK_FLIGHT_RESULT, flightNumber: 'DP5678' }]);
 
     mockPrisma.flight.findFirst.mockResolvedValue(null);
     mockPrisma.flight.create.mockResolvedValue({
@@ -180,7 +190,13 @@ describe('createSubscription', () => {
     mockPrisma.subscription.findUnique.mockResolvedValue(null);
     mockPrisma.subscription.create.mockResolvedValue({ id: 'sub-2', isActive: true });
 
-    const result = await createSubscription(BigInt(123456789), undefined, 'SVO', 'LED', '2025-12-25');
+    const result = await createSubscription(
+      BigInt(123456789),
+      undefined,
+      'SVO',
+      'LED',
+      '2025-12-25',
+    );
 
     expect(result.flight.flightNumber).toBe('DP5678');
     expect(vi.mocked(searchFlights)).toHaveBeenCalledWith({
@@ -210,7 +226,13 @@ describe('createSubscription', () => {
     mockPrisma.subscription.findUnique.mockResolvedValue(null);
     mockPrisma.subscription.create.mockResolvedValue({ id: 'sub-1', isActive: true });
 
-    const result = await createSubscription(BigInt(123456789), 'SU1234', 'SVO', 'LED', '2025-12-25');
+    const result = await createSubscription(
+      BigInt(123456789),
+      'SU1234',
+      'SVO',
+      'LED',
+      '2025-12-25',
+    );
 
     expect(result.isNew).toBe(false);
     expect(result.previousPrice).toBeUndefined();
@@ -228,7 +250,13 @@ describe('createSubscription', () => {
     mockPrisma.subscription.findUnique.mockResolvedValue(null);
     mockPrisma.subscription.create.mockResolvedValue({ id: 'sub-1', isActive: true });
 
-    const result = await createSubscription(BigInt(123456789), 'SU1234', 'SVO', 'LED', '2025-12-25');
+    const result = await createSubscription(
+      BigInt(123456789),
+      'SU1234',
+      'SVO',
+      'LED',
+      '2025-12-25',
+    );
 
     expect(result.previousPrice).toEqual({ amount: 10000, currency: 'RUB' });
   });
@@ -246,7 +274,13 @@ describe('createSubscription', () => {
     mockPrisma.subscription.findUnique.mockResolvedValue(existingSub);
     mockPrisma.subscription.update.mockResolvedValue({ id: 'sub-1', isActive: true });
 
-    const result = await createSubscription(BigInt(123456789), 'SU1234', 'SVO', 'LED', '2025-12-25');
+    const result = await createSubscription(
+      BigInt(123456789),
+      'SU1234',
+      'SVO',
+      'LED',
+      '2025-12-25',
+    );
 
     expect(result.subscription.isActive).toBe(true);
     expect(mockPrisma.subscription.create).not.toHaveBeenCalled();
