@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             set -e
-            cd /opt/tg-zarya-bot
+            cd tg-zarya-bot
             tar xzf /tmp/deploy.tar.gz
             rm /tmp/deploy.tar.gz
 
