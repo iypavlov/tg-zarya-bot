@@ -20,7 +20,7 @@ function mockFetch(responseData: unknown, ok = true) {
 }
 
 const mockTicket = {
-  flight_number: 'SU1234',
+  flight_number: '1234',
   airline: 'SU',
   origin: 'SVO',
   destination: 'LED',
@@ -35,7 +35,7 @@ const mockTicket = {
 };
 
 const mockTicketBusiness = {
-  flight_number: 'SU1234',
+  flight_number: '1234',
   airline: 'SU',
   origin: 'SVO',
   destination: 'LED',
@@ -91,7 +91,7 @@ describe('searchFlights', () => {
   });
 
   it('should return empty array when flight number does not match', async () => {
-    const otherTicket = { ...mockTicket, flight_number: 'DP5678' };
+    const otherTicket = { ...mockTicket, flight_number: '5678' };
     mockFetch({ success: true, data: [otherTicket] });
 
     const results = await searchFlights({
