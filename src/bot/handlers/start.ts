@@ -26,7 +26,7 @@ export function registerStartHandler(bot: {
         'Я отслеживаю цены на билеты Аэрофлота и уведомляю об изменениях.\n\n' +
         'Доступные команды:\n' +
         '/subscribe — подписаться на рейс\n' +
-        '/my-flights — мои подписки\n' +
+        '/myflights — мои подписки\n' +
         '/unsubscribe — отписаться от рейса\n' +
         '/help — справка',
     );
@@ -37,7 +37,7 @@ export function registerStartHandler(bot: {
       'Доступные команды:\n\n' +
         '/start — приветствие\n' +
         '/subscribe — подписаться на рейс\n' +
-        '/my-flights — мои подписки\n' +
+        '/myflights — мои подписки\n' +
         '/unsubscribe — отписаться от рейса\n' +
         '/help — эта справка',
     );

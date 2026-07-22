@@ -1,7 +1,12 @@
 services:
   bot:
-    build: .
+    build:
+      context: .
+      args:
+        DATABASE_URL: ${DATABASE_URL}
     env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     depends_on:
       postgres:
         condition: service_healthy
@@ -16,7 +21,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U zaryabot']
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
       interval: 10s
     restart: unless-stopped
 

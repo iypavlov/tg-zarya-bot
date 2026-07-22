@@ -7,7 +7,6 @@ import {
 } from '../../services/subscription.js';
 import {
   getMyFlightsKeyboard,
-  getFlightInfoKeyboard,
   getMainMenuKeyboard,
   getUnsubConfirmKeyboard,
 } from '../keyboards.js';
@@ -128,7 +127,7 @@ export function registerCallbackHandler(bot: Bot<BotContext>) {
     const sub = await ctx.prisma.subscription.findFirst({
       where: {
         flightId,
-        user: { telegramId: BigInt(ctx.from!.id) },
+        user: { telegramId: BigInt(ctx.from.id) },
         isActive: true,
       },
       include: { flight: true },

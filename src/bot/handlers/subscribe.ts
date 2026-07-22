@@ -67,7 +67,7 @@ export function registerSubscribeHandler(bot: Bot<BotContext>) {
       const depDate = new Date(parsed.departureDate);
       const dateStr = depDate.toLocaleDateString('ru-RU');
 
-      await ctx.api.deleteMessage(ctx.chat!.id, statusMsg.message_id).catch(() => {});
+      await ctx.api.deleteMessage(ctx.chat.id, statusMsg.message_id).catch(() => {});
 
       const oldPriceLine = result.previousPrice
         ? `📊 Было: ${Number(result.previousPrice.amount).toLocaleString('ru-RU')} ${result.previousPrice.currency}\n`
@@ -83,7 +83,7 @@ export function registerSubscribeHandler(bot: Bot<BotContext>) {
         { reply_markup: getFlightInfoKeyboard(result.flight.id) },
       );
     } catch (err) {
-      await ctx.api.deleteMessage(ctx.chat!.id, statusMsg.message_id).catch(() => {});
+      await ctx.api.deleteMessage(ctx.chat.id, statusMsg.message_id).catch(() => {});
 
       if (err instanceof SubscriptionError) {
         await ctx.reply(`❌ ${err.message}`);

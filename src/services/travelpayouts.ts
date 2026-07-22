@@ -8,9 +8,11 @@ interface TravelpayoutsTicket {
   airline: string;
   origin: string;
   destination: string;
+  origin_airport?: string;
+  destination_airport?: string;
   departure_at: string;
   price: number;
-  currency: string;
+  currency?: string;
   transfers: number;
   trip_class: number;
   return_at: string;
@@ -72,17 +74,18 @@ export async function searchFlights(
   let tickets = json.data;
 
   if (params.flightNumber) {
-    tickets = tickets.filter((t) => t.flight_number === params.flightNumber);
+    const numPart = params.flightNumber.replace(/^[A-Z]+/, '');
+    tickets = tickets.filter((t) => t.flight_number === numPart);
   }
 
   return tickets.map((t) => ({
-    flightNumber: t.flight_number,
+    flightNumber: `${t.airline}${t.flight_number}`,
     airline: t.airline,
-    origin: t.origin,
-    destination: t.destination,
+    origin: t.origin_airport ?? t.origin,
+    destination: t.destination_airport ?? t.destination,
     departureDate: new Date(t.departure_at),
     amount: t.price,
-    currency: t.currency.toUpperCase(),
+    currency: (t.currency ?? json.currency ?? 'rub').toUpperCase(),
     transfers: t.transfers,
   }));
 }

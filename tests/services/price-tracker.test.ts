@@ -88,27 +88,21 @@ describe('checkPrices', () => {
       notifyOnChange: true,
       flight: {
         ...FLIGHT,
-        prices: [
-          { id: 'price-1', amount: 10000, currency: 'RUB', checkedAt: new Date() },
-        ],
+        prices: [{ id: 'price-1', amount: 10000, currency: 'RUB', checkedAt: new Date() }],
       },
     };
 
-    const mockUsers = [
-      { id: 'user-1', telegramId: BigInt(123), username: 'user1' },
-    ];
+    const mockUsers = [{ id: 'user-1', telegramId: BigInt(123), username: 'user1' }];
 
-    mockPrisma.subscription.findMany
-      .mockResolvedValueOnce([sub])
-      .mockResolvedValueOnce(
-        mockUsers.map((u) => ({
-          id: 'sub-1',
-          flightId: 'flight-1',
-          isActive: true,
-          notifyOnChange: true,
-          user: u,
-        })),
-      );
+    mockPrisma.subscription.findMany.mockResolvedValueOnce([sub]).mockResolvedValueOnce(
+      mockUsers.map((u) => ({
+        id: 'sub-1',
+        flightId: 'flight-1',
+        isActive: true,
+        notifyOnChange: true,
+        user: u,
+      })),
+    );
 
     vi.mocked(getFlightPrice).mockResolvedValue({
       flightNumber: 'SU1234',
