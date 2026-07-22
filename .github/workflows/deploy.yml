@@ -27,14 +27,7 @@ jobs:
 
       - name: Package source
         run: |
-          tar czf deploy.tar.gz \
-            --exclude=.git \
-            --exclude=node_modules \
-            --exclude=dist \
-            --exclude=.env \
-            --exclude=plans \
-            --warning=no-file-changed \
-            .
+          git archive --format=tar.gz -o deploy.tar.gz HEAD
 
       - name: Copy code to VPS
         uses: appleboy/scp-action@v0.1.7
