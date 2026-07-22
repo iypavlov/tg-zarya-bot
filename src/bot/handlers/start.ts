@@ -1,9 +1,9 @@
-import { BotContext } from '../context.js';
+import type { Bot } from 'grammy';
+import type { BotContext } from '../context.js';
+import { getMainMenuKeyboard, MAIN_MENU_TEXT } from '../keyboards.js';
 
-export function registerStartHandler(bot: {
-  command: (cmd: string, handler: (ctx: BotContext) => void) => void;
-}) {
-  bot.command('start', async (ctx: BotContext) => {
+export function registerStartHandler(bot: Bot<BotContext>) {
+  bot.command('start', async (ctx) => {
     const telegramId = ctx.from?.id;
     if (!telegramId) return;
 
@@ -21,25 +21,7 @@ export function registerStartHandler(bot: {
       });
     }
 
-    await ctx.reply(
-      'Добро пожаловать в zarya Bot! 🛫\n\n' +
-        'Я отслеживаю цены на билеты Аэрофлота и уведомляю об изменениях.\n\n' +
-        'Доступные команды:\n' +
-        '/subscribe — подписаться на рейс\n' +
-        '/myflights — мои подписки\n' +
-        '/unsubscribe — отписаться от рейса\n' +
-        '/help — справка',
-    );
+    await ctx.reply(MAIN_MENU_TEXT, { reply_markup: getMainMenuKeyboard() });
   });
 
-  bot.command('help', async (ctx: BotContext) => {
-    await ctx.reply(
-      'Доступные команды:\n\n' +
-        '/start — приветствие\n' +
-        '/subscribe — подписаться на рейс\n' +
-        '/myflights — мои подписки\n' +
-        '/unsubscribe — отписаться от рейса\n' +
-        '/help — эта справка',
-    );
-  });
 }

@@ -2,7 +2,7 @@ import { prisma } from '../db/client.js';
 import { searchFlights, getFlightPrice } from './travelpayouts.js';
 import type { FlightPriceResult } from '../types/index.js';
 
-interface FlightData {
+export interface FlightData {
   id: string;
   flightNumber: string;
   origin: string;
@@ -11,7 +11,7 @@ interface FlightData {
   airline: string;
 }
 
-interface SubscriptionResult {
+export interface SubscriptionResult {
   flight: FlightData;
   price: FlightPriceResult;
   previousPrice?: { amount: number; currency: string };
@@ -39,7 +39,7 @@ export async function createSubscription(
     flightData = await getFlightPrice(flightNumber, origin, destination, departureDate);
     if (!flightData) {
       throw new SubscriptionError(
-        `Рейс ${flightNumber} не найден по направлению ${origin} → ${destination} на указанную дату.`,
+        `Рейс ${flightNumber} не найден по направлению ${origin} ${destination} на указанную дату.`,
       );
     }
   } else {
@@ -51,13 +51,20 @@ export async function createSubscription(
     throw new SubscriptionError('Не удалось найти рейсы по заданному направлению.');
   }
 
-  const depDate = new Date(departureDate);
+  return createSubscriptionFromResult(telegramId, flightData);
+}
+
+export async function createSubscriptionFromResult(
+  telegramId: bigint,
+  flightData: FlightPriceResult,
+): Promise<SubscriptionResult> {
+  const depDate = new Date(flightData.departureDate);
 
   const existingFlight = await prisma.flight.findFirst({
     where: {
       flightNumber: flightData.flightNumber,
-      origin,
-      destination,
+      origin: flightData.origin,
+      destination: flightData.destination,
       departureDate: depDate,
     },
   });
@@ -68,8 +75,8 @@ export async function createSubscription(
     flight = await prisma.flight.create({
       data: {
         flightNumber: flightData.flightNumber,
-        origin,
-        destination,
+        origin: flightData.origin,
+        destination: flightData.destination,
         departureDate: depDate,
         airline: flightData.airline,
       },

@@ -46,7 +46,7 @@ export async function searchFlights(
   url.searchParams.set('destination', params.destination);
   url.searchParams.set('departure_at', params.departureDate);
   url.searchParams.set('one_way', 'true');
-  url.searchParams.set('direct', 'true');
+  url.searchParams.set('direct', 'false');
   url.searchParams.set('currency', 'rub');
   url.searchParams.set('limit', '20');
   url.searchParams.set('token', config.TRAVELPAYOUTS_TOKEN);
