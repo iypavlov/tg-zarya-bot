@@ -1,9 +1,6 @@
 services:
   bot:
-    build:
-      context: .
-      args:
-        DATABASE_URL: ${DATABASE_URL}
+    build: .
     env_file: .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}

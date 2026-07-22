@@ -2,5 +2,6 @@ node_modules/
 dist/
 plans/
 .env
+deploy.tar.gz
 *.log
 .DS_Store
