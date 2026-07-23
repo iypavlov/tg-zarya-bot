@@ -56,7 +56,6 @@ jobs:
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             TRAVELPAYOUTS_TOKEN=${{ secrets.TRAVELPAYOUTS_TOKEN }}
-            BOT_ADMIN_ID=${{ secrets.BOT_ADMIN_ID }}
             LOG_LEVEL=info
             PORT=3000
             ENDOFENV

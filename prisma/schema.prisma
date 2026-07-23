@@ -36,7 +36,6 @@ model Price {
   flight    Flight   @relation(fields: [flightId], references: [id])
   amount    Decimal
   currency  String   @default("RUB")
-  fareClass String?
   checkedAt DateTime @default(now())
   source    String   @default("travelpayouts")
 }
@@ -49,7 +48,6 @@ model Subscription {
   flight         Flight     @relation(fields: [flightId], references: [id])
   isActive       Boolean    @default(true)
   notifyOnChange Boolean    @default(true)
-  notifyDaily    Boolean    @default(false)
   lastNotifiedAt DateTime?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt

@@ -124,7 +124,6 @@ tests/            # Юнит-тесты (Vitest)
 | `BOT_TOKEN` | Yes | Telegram bot token |
 | `DATABASE_URL` | Yes | PostgreSQL connection string |
 | `TRAVELPAYOUTS_TOKEN` | Yes | Travelpayouts API token |
-| `BOT_ADMIN_ID` | Yes | Admin Telegram ID |
 | `POSTGRES_DB` | Yes | PostgreSQL database name |
 | `POSTGRES_USER` | Yes | PostgreSQL user |
 | `POSTGRES_PASSWORD` | Yes | PostgreSQL password |

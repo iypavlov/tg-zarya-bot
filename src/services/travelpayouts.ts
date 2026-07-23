@@ -27,7 +27,7 @@ interface TravelpayoutsResponse {
   currency?: string;
 }
 
-export class TravelpayoutsError extends Error {
+class TravelpayoutsError extends Error {
   constructor(
     message: string,
     public readonly statusCode?: number,

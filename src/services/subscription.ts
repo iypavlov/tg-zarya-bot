@@ -1,8 +1,7 @@
 import { prisma } from '../db/client.js';
-import { searchFlights, getFlightPrice } from './travelpayouts.js';
 import type { FlightPriceResult } from '../types/index.js';
 
-export interface FlightData {
+interface FlightData {
   id: string;
   flightNumber: string;
   origin: string;
@@ -11,7 +10,7 @@ export interface FlightData {
   airline: string;
 }
 
-export interface SubscriptionResult {
+interface SubscriptionResult {
   flight: FlightData;
   price: FlightPriceResult;
   previousPrice?: { amount: number; currency: string };
@@ -24,34 +23,6 @@ export class SubscriptionError extends Error {
     super(message);
     this.name = 'SubscriptionError';
   }
-}
-
-export async function createSubscription(
-  telegramId: bigint,
-  flightNumber: string | undefined,
-  origin: string,
-  destination: string,
-  departureDate: string,
-): Promise<SubscriptionResult> {
-  let flightData: FlightPriceResult | null = null;
-
-  if (flightNumber) {
-    flightData = await getFlightPrice(flightNumber, origin, destination, departureDate);
-    if (!flightData) {
-      throw new SubscriptionError(
-        `Рейс ${flightNumber} не найден по направлению ${origin} ${destination} на указанную дату.`,
-      );
-    }
-  } else {
-    const results = await searchFlights({ origin, destination, departureDate });
-    flightData = results[0] ?? null;
-  }
-
-  if (!flightData) {
-    throw new SubscriptionError('Не удалось найти рейсы по заданному направлению.');
-  }
-
-  return createSubscriptionFromResult(telegramId, flightData);
 }
 
 export async function createSubscriptionFromResult(

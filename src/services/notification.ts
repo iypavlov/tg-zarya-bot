@@ -2,7 +2,7 @@ import type { Bot } from 'grammy';
 import type { BotContext } from '../bot/context.js';
 import { prisma } from '../db/client.js';
 
-export interface PriceChange {
+interface PriceChange {
   flightId: string;
   flightNumber: string;
   origin: string;
