@@ -1,103 +1,132 @@
+<div align="center">
+
 # tg-zarya-bot
 
-Telegram bot for tracking Aeroflot ticket prices with change notifications.
+Telegram-бот для отслеживания цен на авиабилеты с автоматическими уведомлениями об изменениях.
 
-## Stack
+[![Node.js](https://img.shields.io/badge/Node.js-22-3c873a?style=flat-square&logo=node.js)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql)](https://www.postgresql.org)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io)
+[![grammY](https://img.shields.io/badge/grammY-0088CC?style=flat-square&logo=telegram)](https://grammy.dev)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
-- **Runtime:** Node.js 22 + TypeScript
-- **Bot framework:** grammY
-- **Database:** PostgreSQL 16 + Prisma ORM
-- **Data source:** Travelpayouts API
-- **Scheduler:** node-cron (price checks every hour)
-- **Containerization:** Docker + docker-compose
-- **CI/CD:** GitHub Actions
+</div>
 
-## Quick start
+## Overview
 
-### 1. Prerequisites
+tg-zarya-bot — это бот для Telegram, который помогает отслеживать цены на авиабилеты. Пользователь может найти рейс по направлению и дате, подписаться на него, а бот будет автоматически проверять цену каждый час и присылать уведомление, если она изменилась.
 
-- Node.js 22+
-- Docker and docker-compose
-- Telegram bot token (from [@BotFather](https://t.me/BotFather))
-- Travelpayouts API token (register as partner at [travelpayouts.com](https://travelpayouts.com))
+## Features
 
-### 2. Setup
+- **Поиск билетов** — поиск по направлению и дате через Travelpayouts API
+- **Автоматический мониторинг** — проверка цен каждый час с помощью node-cron
+- **Уведомления об изменениях** — бот присылает сообщение при повышении или понижении цены
+- **Inline-интерфейс** — всё управление через кнопки под сообщениями
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 22
+- Docker и docker-compose
+- Токен бота от [@BotFather](https://t.me/BotFather)
+- Токен Travelpayouts ([регистрация](https://travelpayouts.com))
+
+### Setup
 
 ```bash
 git clone <repo-url>
 cd tg-zarya-bot
 
 cp .env.example .env
-# Fill in .env with your tokens and secrets
+# Заполните .env — BOT_TOKEN, TRAVELPAYOUTS_TOKEN, DATABASE_URL и др.
 
 npm ci
 npx prisma generate
 npx prisma migrate deploy
 ```
 
-### 3. Run locally
+### Run locally
 
 ```bash
-# Terminal 1: start PostgreSQL
 docker compose up postgres -d
-
-# Terminal 2: start bot (auto-restart on changes)
 npm run dev
 ```
 
-### 4. Run with Docker
+### Run with Docker
 
 ```bash
 docker compose up --build
 ```
 
-## Commands
+## Usage
 
-| Command                                | Description                       |
-| -------------------------------------- | --------------------------------- |
-| `/start`                               | Register and show welcome message |
-| `/subscribe SU1234 SVO LED 25.12.2024` | Subscribe to a flight             |
-| `/myflights`                           | List active subscriptions         |
-| `/unsubscribe`                         | Unsubscribe from a flight         |
+Бот использует inline-клавиатуру. Основные сценарии:
+
+| Действие | Описание |
+|---|---|
+| `/start` | Регистрация и главное меню |
+| «Подписаться» | Ввести данные рейса (`SU1234 SVO LED 25.12.2024`) |
+| «Мои подписки» | Список активных подписок с возможностью отписки |
+| «Помощь» | Справка |
+
+> [!TIP]
+> Формат ввода рейса: `[НОМЕР_РЕЙСА] ОТКУДА КУДА ДАТА`. Номер рейса опционален. Примеры: `SU1234 SVO LED 25.12.2024` или `SVO LED 2024-12-25`.
+
+## Tech stack
+
+| | |
+|---|---|
+| **Runtime** | Node.js 22 + TypeScript |
+| **Bot framework** | [grammY](https://grammy.dev) |
+| **Database** | PostgreSQL 16 + [Prisma](https://prisma.io) ORM |
+| **Data source** | [Travelpayouts API](https://travelpayouts.com) |
+| **Scheduler** | node-cron (каждый час) |
+| **Tests** | Vitest |
+| **Containerization** | Docker + docker-compose |
+| **CI/CD** | GitHub Actions |
 
 ## Project structure
 
 ```
 src/
-├── bot/           # grammY bot setup, handlers, keyboards
-│   ├── handlers/  # /start, /subscribe, /myflights, /unsubscribe, callbacks
-│   └── index.ts   # Bot initialization + health check HTTP server
-├── services/      # Business logic
-│   ├── price-tracker.ts   # Hourly cron price checks
-│   ├── notification.ts    # Sending price alerts to users
-│   ├── subscription.ts    # Subscription CRUD
-│   └── travelpayouts.ts   # Travelpayouts API client
-├── db/            # Prisma client setup
-├── config/        # Environment validation (zod)
-└── types/         # Shared TypeScript types
+├── bot/          # Инициализация бота, хендлеры, клавиатуры
+├── services/     # Бизнес-логика (трекер цен, нотификации, подписки, API-клиент)
+├── config/       # Валидация окружения (zod)
+├── db/           # Prisma client
+└── types/        # Общие типы
+tests/            # Юнит-тесты (Vitest)
 ```
 
-## Health check
+## Scripts
 
-When `PORT` is set (default `3000`), the bot starts an HTTP server:
-
-- `GET /health` — returns `{"status":"ok"}` with DB connectivity check
-
-Used by Docker `HEALTHCHECK` and monitoring systems.
+| Команда | Описание |
+|---|---|
+| `npm run dev` | Запуск с hot reload |
+| `npm run build` | Сборка TypeScript |
+| `npm test` | Запуск тестов |
+| `npm run lint` | Линтер (ESLint) |
+| `npm run typecheck` | Проверка типов |
 
 ## CI/CD
 
-On push to `main`:
+При пуше тега `v*` (например `v1.0.0`) GitHub Actions:
 
-1. **Test job:** typecheck, lint, format check, run migrations, run tests
-2. **Deploy job:** build Docker image, push to Docker Hub, SSH into VPS and redeploy
+1. Запускает typecheck, lint и тесты
+2. Архивирует код и копирует на VPS через SCP
+3. Запускает `docker compose up -d --build`
 
-Required GitHub secrets:
+## Environment variables
 
-| Secret            | Description         |
-| ----------------- | ------------------- |
-| `DOCKER_USERNAME` | Docker Hub username |
-| `DOCKER_PASSWORD` | Docker Hub password |
-| `VPS_HOST`        | VPS IP address      |
-| `VPS_USER`        | SSH user            |
-| `VPS_SSH_KEY`     | SSH private key     |
+| Variable | Required | Description |
+|---|---|---|
+| `BOT_TOKEN` | Yes | Telegram bot token |
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `TRAVELPAYOUTS_TOKEN` | Yes | Travelpayouts API token |
+| `BOT_ADMIN_ID` | Yes | Admin Telegram ID |
+| `POSTGRES_DB` | Yes | PostgreSQL database name |
+| `POSTGRES_USER` | Yes | PostgreSQL user |
+| `POSTGRES_PASSWORD` | Yes | PostgreSQL password |
+| `PORT` | No | Health check port (default 3000) |
+| `LOG_LEVEL` | No | Logging level (default info) |

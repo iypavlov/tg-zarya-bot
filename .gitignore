@@ -5,3 +5,5 @@ plans/
 deploy.tar.gz
 *.log
 .DS_Store
+.agents/
+skills-lock.json
